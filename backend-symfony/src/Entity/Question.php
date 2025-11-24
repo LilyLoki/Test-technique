@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
@@ -28,6 +30,17 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Questionnaire $questionnaireId = null;
+
+    /**
+     * @var Collection<int, Choice>
+     */
+    #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'questionId', orphanRemoval: true)]
+    private Collection $choices;
+
+    public function __construct()
+    {
+        $this->choices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +103,36 @@ class Question
     public function setQuestionnaireId(?Questionnaire $questionnaireId): static
     {
         $this->questionnaireId = $questionnaireId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Choice>
+     */
+    public function getChoices(): Collection
+    {
+        return $this->choices;
+    }
+
+    public function addChoice(Choice $choice): static
+    {
+        if (!$this->choices->contains($choice)) {
+            $this->choices->add($choice);
+            $choice->setQuestionId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChoice(Choice $choice): static
+    {
+        if ($this->choices->removeElement($choice)) {
+            // set the owning side to null (unless already changed)
+            if ($choice->getQuestionId() === $this) {
+                $choice->setQuestionId(null);
+            }
+        }
 
         return $this;
     }
