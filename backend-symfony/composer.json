@@ -21,7 +21,8 @@
         "friendsofphp/php-cs-fixer": "^3.66",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-doctrine": "^2.0",
-        "phpstan/phpstan-symfony": "^2.0"
+        "phpstan/phpstan-symfony": "^2.0",
+        "symfony/maker-bundle": "^1.65"
     },
     "config": {
         "allow-plugins": {
