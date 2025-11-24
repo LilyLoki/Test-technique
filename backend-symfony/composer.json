@@ -67,6 +67,10 @@
         ],
          "test:phpstan": [
             "vendor/bin/phpstan analyse"
+        ],
+        "test:all": [
+            "@test:csfixer",
+            "@test:phpstan"
         ]
 
     },
