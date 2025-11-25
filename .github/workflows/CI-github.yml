@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+
+  # ----------------------------
+  #   BACKEND (Symfony / PHP)
+  # ----------------------------
+  backend:
+    runs-on: ubuntu-latest
+
+    # Exécuter ce job uniquement si le dossier backend a changé
+    if: contains(join(github.event.pull_request.changed_files.*.filename, ','), 'TestTechnique/backend-symfony')
+
+    defaults:
+      run:
+        working-directory: ./TestTechnique/backend-symfony
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_pgsql
+          tools: phpstan, cs2pr
+          coverage: none
+
+      - name: Install dependencies (Composer)
+        run: composer install --no-progress --no-interaction --prefer-dist
+
+      - name: Run PHP-CS-Fixer (dry-run)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=1G
