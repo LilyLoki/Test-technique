@@ -18,7 +18,7 @@ class Questionnaire
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -27,7 +27,7 @@ class Questionnaire
     /**
      * @var Collection<int, Question>
      */
-    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'questionnaireId', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'questionnaire', orphanRemoval: true)]
     private Collection $questions;
 
     public function __construct()
@@ -88,7 +88,7 @@ class Questionnaire
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
-            $question->setQuestionnaireId($this);
+            $question->setquestionnaire($this);
         }
 
         return $this;
@@ -98,8 +98,8 @@ class Questionnaire
     {
         if ($this->questions->removeElement($question)) {
             // set the owning side to null (unless already changed)
-            if ($question->getQuestionnaireId() === $this) {
-                $question->setQuestionnaireId(null);
+            if ($question->getquestionnaire() === $this) {
+                $question->setquestionnaire(null);
             }
         }
 

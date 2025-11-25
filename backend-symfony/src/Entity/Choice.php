@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\ChoiceRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
@@ -14,18 +13,18 @@ class Choice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text')]
     private ?string $choiceText = null;
 
     #[ORM\Column]
     private ?int $displayOrder = null;
 
-    #[ORM\ManyToOne(targetEntity: Question::class,inversedBy: 'choices')]
+    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'choices')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Question $questionId = null;
+    private ?Question $question = null;
 
     #[ORM\ManyToOne(targetEntity: Question::class)]
-    private ?Question $nextQuestionId = null;
+    private ?Question $nextQuestion = null;
 
     public function getId(): ?int
     {
@@ -56,26 +55,26 @@ class Choice
         return $this;
     }
 
-    public function getQuestionId(): ?Question
+    public function getQuestion(): ?Question
     {
-        return $this->questionId;
+        return $this->question;
     }
 
-    public function setQuestionId(?Question $questionId): static
+    public function setQuestion(?Question $question): static
     {
-        $this->questionId = $questionId;
+        $this->question = $question;
 
         return $this;
     }
 
-    public function getNextQuestionId(): ?Question
+    public function getNextQuestion(): ?Question
     {
-        return $this->nextQuestionId;
+        return $this->nextQuestion;
     }
 
-    public function setNextQuestionId(?Question $nextQuestionId): static
+    public function setNextQuestion(?Question $nextQuestion): static
     {
-        $this->nextQuestionId = $nextQuestionId;
+        $this->nextQuestion = $nextQuestion;
 
         return $this;
     }

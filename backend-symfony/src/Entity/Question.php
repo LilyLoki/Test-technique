@@ -15,7 +15,7 @@ class Question
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'text')]
     private ?string $questionText = null;
 
     #[ORM\Column(length: 255)]
@@ -29,12 +29,12 @@ class Question
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Questionnaire $questionnaireId = null;
+    private ?Questionnaire $questionnaire = null;
 
     /**
      * @var Collection<int, Choice>
      */
-    #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'questionId', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'question', orphanRemoval: true)]
     private Collection $choices;
 
     public function __construct()
@@ -95,14 +95,14 @@ class Question
         return $this;
     }
 
-    public function getQuestionnaireId(): ?Questionnaire
+    public function getQuestionnaire(): ?Questionnaire
     {
-        return $this->questionnaireId;
+        return $this->questionnaire;
     }
 
-    public function setQuestionnaireId(?Questionnaire $questionnaireId): static
+    public function setQuestionnaire(?Questionnaire $questionnaire): static
     {
-        $this->questionnaireId = $questionnaireId;
+        $this->questionnaire = $questionnaire;
 
         return $this;
     }
@@ -119,7 +119,7 @@ class Question
     {
         if (!$this->choices->contains($choice)) {
             $this->choices->add($choice);
-            $choice->setQuestionId($this);
+            $choice->setquestion($this);
         }
 
         return $this;
@@ -129,8 +129,8 @@ class Question
     {
         if ($this->choices->removeElement($choice)) {
             // set the owning side to null (unless already changed)
-            if ($choice->getQuestionId() === $this) {
-                $choice->setQuestionId(null);
+            if ($choice->getquestion() === $this) {
+                $choice->setquestion(null);
             }
         }
 
