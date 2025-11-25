@@ -12,12 +12,9 @@ jobs:
   backend:
     runs-on: ubuntu-latest
 
-    # Exécuter ce job uniquement si le dossier backend a changé
-    if: contains(join(github.event.pull_request.changed_files.*.filename, ','), 'TestTechnique/backend-symfony')
-
     defaults:
       run:
-        working-directory: ./TestTechnique/backend-symfony
+        working-directory: backend-symfony
 
     steps:
       - name: Checkout code
@@ -30,6 +27,9 @@ jobs:
           extensions: mbstring, intl, pdo_pgsql
           tools: phpstan, cs2pr
           coverage: none
+
+      - name: Create .env file 
+        run: cp backend-symfony/.env.example backend-symfony/.env
 
       - name: Install dependencies (Composer)
         run: composer install --no-progress --no-interaction --prefer-dist
