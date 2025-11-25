@@ -5,8 +5,19 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  lint-and-analyze:
+
+  # ----------------------------
+  #   BACKEND (Symfony / PHP)
+  # ----------------------------
+  backend:
     runs-on: ubuntu-latest
+
+    # Exécuter ce job uniquement si le dossier backend a changé
+    if: contains(join(github.event.pull_request.changed_files.*.filename, ','), 'TestTechnique/backend-symfony')
+
+    defaults:
+      run:
+        working-directory: ./TestTechnique/backend-symfony
 
     steps:
       - name: Checkout code
