@@ -28,6 +28,50 @@ jobs:
           tools: phpstan, cs2pr
           coverage: none
 
+      - name: Checkout repository (full fetch)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+  
+      - name: Debug workspace and check for .env.example
+        run: |
+          echo "REF: 2c7ed7a9fa4064914de3ed71f2a68f910e27e720"
+          echo "Runner working dir: $(pwd)"
+  
+          echo "---- repo root ----"
+          ls -la
+  
+          echo "---- backend-symfony ----"
+          ls -la backend-symfony || true
+  
+          echo "---- git info ----"
+          git rev-parse --verify HEAD || true
+          git rev-parse --abbrev-ref HEAD || true
+          git status --porcelain || true
+  
+          echo "---- tracked files under backend-symfony ----"
+          git --no-pager ls-files backend-symfony || true
+  
+      - name: Ensure backend .env exists (copy or create fallback)
+        run: |
+          if [ -f backend-symfony/.env.example ]; then
+            echo "Found backend-symfony/.env.example — copying to backend-symfony/.env"
+            cp backend-symfony/.env.example backend-symfony/.env
+          else
+            echo "WARNING: backend-symfony/.env.example not found. Creating minimal fallback backend-symfony/.env"
+            mkdir -p backend-symfony
+            cat > backend-symfony/.env <<'EOF'
+            APP_ENV=dev
+            APP_SECRET=ChangeMe
+            DATABASE_URL=mysql://db_user:db_pass@127.0.0.1:3306/db_name
+            EOF
+                    fi
+            
+                    echo "---- backend-symfony/.env contents ----"
+                    sed -n '1,200p' backend-symfony/.env || true
+  
+
       - name: Create .env file 
         run: cp backend-symfony/.env.example backend-symfony/.env
 
