@@ -7,6 +7,9 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "doctrine/doctrine-bundle": "^2.18",
+        "doctrine/doctrine-migrations-bundle": "^3.7",
+        "doctrine/orm": "^3.5",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
         "symfony/flex": "^2",
@@ -15,10 +18,13 @@
         "symfony/yaml": "7.1.*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.66",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-doctrine": "^2.0",
-        "phpstan/phpstan-symfony": "^2.0"
+        "phpstan/phpstan-symfony": "^2.0",
+        "symfony/maker-bundle": "^1.65",
+        "zenstruck/foundry": "^2.8"
     },
     "config": {
         "allow-plugins": {
@@ -71,7 +77,14 @@
         "test:all": [
             "@test:csfixer",
             "@test:phpstan"
+        ],
+        "db": [
+            "php bin/console doctrine:database:drop --force ",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:create",
+            "php bin/console doctrine:fixtures:load --no-interaction"
         ]
+
 
     },
     "conflict": {
