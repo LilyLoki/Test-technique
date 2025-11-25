@@ -29,7 +29,7 @@ jobs:
           coverage: none
 
       - name: Create .env file 
-        run: cp b.env.example .env
+        run: cp .env.example .env
 
       - name: Install dependencies (Composer)
         run: composer install --no-progress --no-interaction --prefer-dist
