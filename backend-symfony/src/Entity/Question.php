@@ -35,7 +35,10 @@ class Question
     private ?string $mediaType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Url(message: "L'URL du média doit être valide.")]
+    #[Assert\Url(
+        message: "L'URL du média doit être valide.",
+        requireTld: false
+    )]
     private ?string $mediaUrl = null;
 
     #[ORM\Column]
@@ -52,12 +55,6 @@ class Question
      */
     #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'question', orphanRemoval: true)]
     #[Assert\Valid]
-    #[Assert\Count(
-        min: 1,
-        max: 4,
-        minMessage: 'La question doit contenir au minimum 1 choix.',
-        maxMessage: 'La question ne peut pas contenir plus de 4 choix.'
-    )]
     private Collection $choices;
 
     public function __construct()
