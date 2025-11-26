@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
+#[ApiResource]
 class Question
 {
     #[ORM\Id]
@@ -16,25 +19,45 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'Le texte de la question est obligatoire.')]
+    #[Assert\Length(
+        max: 500,
+        maxMessage: 'Le texte de la question ne peut pas dépasser 500 caractères.'
+    )]
     private ?string $questionText = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le type de média est obligatoire.')]
+    #[Assert\Choice(
+        choices: ['image', 'video', 'audio', 'text'],
+        message: "Le type de média doit être l'une des valeurs suivantes : image, video, audio ou text."
+    )]
     private ?string $mediaType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: "L'URL du média doit être valide.")]
     private ?string $mediaUrl = null;
 
     #[ORM\Column]
+    #[Assert\Type(type: 'bool')]
     private ?bool $isRoot = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private ?Questionnaire $questionnaire = null;
 
     /**
      * @var Collection<int, Choice>
      */
     #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'question', orphanRemoval: true)]
+    #[Assert\Valid]
+    #[Assert\Count(
+        min: 1,
+        max: 4,
+        minMessage: 'La question doit contenir au minimum 1 choix.',
+        maxMessage: 'La question ne peut pas contenir plus de 4 choix.'
+    )]
     private Collection $choices;
 
     public function __construct()

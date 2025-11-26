@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ChoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
+#[ApiResource]
 class Choice
 {
     #[ORM\Id]
@@ -14,16 +17,26 @@ class Choice
     private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'Le texte du choix est obligatoire.')]
+    #[Assert\Length(
+        max: 500,
+        maxMessage: 'Le texte du choix ne peut pas dépasser 500 caractères.'
+    )]
     private ?string $choiceText = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'integer')]
+    #[Assert\PositiveOrZero]
     private ?int $displayOrder = null;
 
     #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'choices')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private ?Question $question = null;
 
     #[ORM\ManyToOne(targetEntity: Question::class)]
+    #[Assert\Valid]
     private ?Question $nextQuestion = null;
 
     public function getId(): ?int
