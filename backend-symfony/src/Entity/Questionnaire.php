@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionnaireRepository::class)]
 #[ApiResource]
@@ -18,18 +19,33 @@ class Questionnaire
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre du questionnaire est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le titre du questionnaire ne peut pas dépasser 255 caractères."
+    )]
     private ?string $title = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(
+        max: 2000,
+        maxMessage: "La description ne peut pas dépasser 2000 caractères."
+    )]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\Type(\DateTime::class)]
     private ?\DateTime $creationDate = null;
 
     /**
      * @var Collection<int, Question>
      */
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'questionnaire', orphanRemoval: true)]
+    #[Assert\Valid]
+    #[Assert\Count(
+        min: 1,
+        minMessage: "Le questionnaire doit contenir au moins une question."
+    )]
     private Collection $questions;
 
     public function __construct()
