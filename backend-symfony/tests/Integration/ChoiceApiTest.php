@@ -2,10 +2,10 @@
 
 namespace App\Tests;
 
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Factory\ChoiceFactory;
 use App\Factory\QuestionFactory;
 use App\Factory\QuestionnaireFactory;
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class ChoiceApiTest extends ApiTestCase
 {
@@ -17,11 +17,11 @@ class ChoiceApiTest extends ApiTestCase
             'isRoot' => true,
             'questionnaire' => $questionnaire,
         ]);
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 4; ++$i) {
             ChoiceFactory::createOne([
-            'displayOrder' => $i,
-            'question' => $question,
-        ]);
+                'displayOrder' => $i,
+                'question' => $question,
+            ]);
         }
 
         $response = $client->request(

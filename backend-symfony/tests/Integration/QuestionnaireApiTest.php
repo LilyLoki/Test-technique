@@ -2,8 +2,8 @@
 
 namespace App\Tests;
 
-use App\Factory\QuestionnaireFactory;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use App\Factory\QuestionnaireFactory;
 
 class QuestionnaireApiTest extends ApiTestCase
 {
@@ -14,7 +14,7 @@ class QuestionnaireApiTest extends ApiTestCase
         QuestionnaireFactory::createMany(20);
 
         $response = $client->request(
-            'GET', 
+            'GET',
             '/api/questionnaires'
         );
 
@@ -33,7 +33,7 @@ class QuestionnaireApiTest extends ApiTestCase
         ]);
 
         $response = $client->request(
-            'GET', 
+            'GET',
             "/api/questionnaires/{$questionnaire->getId()}"
         );
 
@@ -54,8 +54,8 @@ class QuestionnaireApiTest extends ApiTestCase
         ];
 
         $response = $client->request(
-            'POST', 
-            '/api/questionnaires', 
+            'POST',
+            '/api/questionnaires',
             [
                 'json' => $jsonData,
             ]
@@ -69,14 +69,14 @@ class QuestionnaireApiTest extends ApiTestCase
         $client = static::createClient();
 
         $questionnaire = QuestionnaireFactory::createOne([
-                'title' => 'Questionnaire existant',
-                'description' => 'Description existant',
-                'creationDate' => new \DateTime(),
-            ]);
+            'title' => 'Questionnaire existant',
+            'description' => 'Description existant',
+            'creationDate' => new \DateTime(),
+        ]);
 
         $response = $client->request(
-            'PATCH', 
-            "/api/questionnaires/{$questionnaire->getId()}", 
+            'PATCH',
+            "/api/questionnaires/{$questionnaire->getId()}",
             [
                 'headers' => [
                     'Content-Type' => 'application/merge-patch+json',
@@ -101,14 +101,14 @@ class QuestionnaireApiTest extends ApiTestCase
         $client = static::createClient();
 
         $questionnaire = QuestionnaireFactory::createOne([
-                'title' => 'Questionnaire existant',
-                'description' => 'Description existant',
-                'creationDate' => new \DateTime(),
-            ]);
+            'title' => 'Questionnaire existant',
+            'description' => 'Description existant',
+            'creationDate' => new \DateTime(),
+        ]);
         $id = $questionnaire->getId();
 
         $response = $client->request(
-            'DELETE', 
+            'DELETE',
             "/api/questionnaires/{$questionnaire->getId()}"
         );
         $this->assertResponseStatusCodeSame(204);
