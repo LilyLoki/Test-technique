@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ChoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
 #[ApiResource]
@@ -16,10 +16,10 @@ class Choice
     private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank(message: "Le texte du choix est obligatoire.")]
+    #[Assert\NotBlank(message: 'Le texte du choix est obligatoire.')]
     #[Assert\Length(
         max: 500,
-        maxMessage: "Le texte du choix ne peut pas dépasser 500 caractères."
+        maxMessage: 'Le texte du choix ne peut pas dépasser 500 caractères.'
     )]
     private ?string $choiceText = null;
 
