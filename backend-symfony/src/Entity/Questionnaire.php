@@ -42,10 +42,6 @@ class Questionnaire
      */
     #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'questionnaire', orphanRemoval: true)]
     #[Assert\Valid]
-    #[Assert\Count(
-        min: 1,
-        minMessage: 'Le questionnaire doit contenir au moins une question.'
-    )]
     private Collection $questions;
 
     public function __construct()
