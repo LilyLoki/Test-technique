@@ -32,10 +32,14 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.66",
-        "phpstan/phpstan": "^1.12",
         "phpstan/phpdoc-parser": "^1.33",
+        "phpstan/phpstan": "^1.12",
         "phpstan/phpstan-doctrine": "^1.5",
         "phpstan/phpstan-symfony": "^1.4",
+        "phpunit/phpunit": "^11.5",
+        "symfony/browser-kit": "7.1.*",
+        "symfony/css-selector": "7.1.*",
+        "symfony/http-client": "7.1.*",
         "symfony/maker-bundle": "^1.65",
         "zenstruck/foundry": "^2.8"
     },
@@ -87,9 +91,16 @@
          "test:phpstan": [
             "vendor/bin/phpstan analyse"
         ],
-        "test:all": [
+        "test:phpunit": [
+            "php bin/console cache:clear --env=test --no-warmup",
+            "rm -f var/data.db", 
+            "php bin/console doctrine:schema:create --quiet --env=test",
+            "vendor/bin/phpunit --testdox"
+        ],
+        "test": [
             "@test:csfixer",
-            "@test:phpstan"
+            "@test:phpstan",
+            "@test:phpunit"
         ],
         "db": [
             "php bin/console doctrine:database:drop --force ",
