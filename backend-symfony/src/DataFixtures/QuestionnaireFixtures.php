@@ -10,6 +10,6 @@ class QuestionnaireFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        QuestionnaireFactory::createMany(3);
+        QuestionnaireFactory::createMany(20);
     }
 }
