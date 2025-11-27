@@ -9,7 +9,9 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --check --ignore-path .gitignore .",
-    "format:fix": "prettier --write --ignore-path .gitignore ."
+    "format:fix": "prettier --write --ignore-path .gitignore .",
+    "test": "npm run lint && npm run format",
+    "fix": "npm run lint:fix && npm run format:fix"
   },
   "dependencies": {
     "next": "16.0.5",
