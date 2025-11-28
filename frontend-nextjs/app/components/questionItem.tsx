@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import ChoiceItem from './choiceItem'
 import { fetchQuestionByUrl } from '../services/api/questionnaires'
 import { Question } from '../types/questionType'
+import MediaItem from './mediaItem'
 
 type Props = {
   urlQuestion: string
@@ -56,6 +57,12 @@ export default function QuestionItem({ urlQuestion }: Props) {
       <h2 className="text-xl font-semibold text-gray-900 mb-2">
         {question?.questionText ?? 'No question text'}
       </h2>
+
+      <MediaItem
+        mediaType={question?.mediaType || 'text'}
+        mediaUrl={question?.mediaUrl || ''}
+      />
+
       <ul>
         {choices.map((urlChoice: string) => (
           <ChoiceItem

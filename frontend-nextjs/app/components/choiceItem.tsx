@@ -38,10 +38,10 @@ export default function ChoiceItem({ urlChoice, onNext, onEnd }: Props) {
   }
 
   return (
-    <li className="bg-grey shadow-md rounded-lg p-6 hover:shadow-xl m-4 border-2">
+    <li className="m-4 border-2 rounded-lg shadow-md hover:shadow-xl">
       <button
         onClick={handleClick}
-        className="text-xl font-semibold text-gray-900 text-left mb-2"
+        className="w-full block text-left px-6 py-4 text-xl font-semibold text-gray-900 rounded-lg"
       >
         {loading ? 'Loading…' : (choice?.choiceText ?? 'No text')}
       </button>
