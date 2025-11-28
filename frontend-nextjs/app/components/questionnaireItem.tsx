@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 import { Questionnaire } from '@/app/types/questionnaireType'
 export default async function QuestionnaireItem({
@@ -12,7 +12,7 @@ export default async function QuestionnaireItem({
         key={questionnaire.id}
         className="bg-white shadow-md rounded-lg p-6 hover:shadow-xl"
       >
-      <Link href={`/questionnaire/${questionnaire.id}`}>
+        <Link href={`/questionnaire/${questionnaire.id}`}>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             {questionnaire.title}
           </h2>

@@ -1,7 +1,7 @@
 import { fetchQuestionnaireById } from '@/app/services/api/questionnaires'
 import { Questionnaire } from '../../types/questionnaireType'
 import QuestionItem from '../../components/questionItem'
-import Link from "next/link";
+import Link from 'next/link'
 export default async function QuestionnairePage({
   params,
 }: {

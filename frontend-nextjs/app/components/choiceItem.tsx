@@ -15,12 +15,12 @@ export default function ChoiceItem({ urlChoice, onNext, onEnd }: Props) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-  const loadData = async () => {
-    setLoading(true)  
-    const data = await fetchChoiceByUrl(urlChoice)
-    setChoice(data)
-    setLoading(false)
-  }
+    const loadData = async () => {
+      setLoading(true)
+      const data = await fetchChoiceByUrl(urlChoice)
+      setChoice(data)
+      setLoading(false)
+    }
 
     loadData()
   }, [urlChoice])
@@ -28,19 +28,22 @@ export default function ChoiceItem({ urlChoice, onNext, onEnd }: Props) {
   function handleClick() {
     if (!choice) return
     const next = choice.nextQuestion
-    console.log("NEXT =", next)
-    if (typeof next === "string" && next.trim().length > 0) {
-    onNext(next)
-  } else {
-    console.log("FINI → onEnd()")
-    onEnd()
-  }
+    console.log('NEXT =', next)
+    if (typeof next === 'string' && next.trim().length > 0) {
+      onNext(next)
+    } else {
+      console.log('FINI → onEnd()')
+      onEnd()
+    }
   }
 
   return (
     <li className="bg-grey shadow-md rounded-lg p-6 hover:shadow-xl m-4 border-2">
-      <button onClick={handleClick} className="text-xl font-semibold text-gray-900 text-left mb-2">
-        {loading ? 'Loading…' : choice?.choiceText ?? 'No text'}
+      <button
+        onClick={handleClick}
+        className="text-xl font-semibold text-gray-900 text-left mb-2"
+      >
+        {loading ? 'Loading…' : (choice?.choiceText ?? 'No text')}
       </button>
     </li>
   )

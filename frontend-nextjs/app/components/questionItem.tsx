@@ -14,13 +14,13 @@ export default function QuestionItem({ urlQuestion }: Props) {
   const [loading, setLoading] = useState(true)
   const [finished, setFinished] = useState(false)
 
- useEffect(() => {
-  const loadData = async () => {
-    setLoading(true) 
-    const data = await fetchQuestionByUrl(urlQuestion)
-    setQuestion(data)
-    setLoading(false)
-  }
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true)
+      const data = await fetchQuestionByUrl(urlQuestion)
+      setQuestion(data)
+      setLoading(false)
+    }
 
     loadData()
   }, [urlQuestion])
@@ -33,7 +33,7 @@ export default function QuestionItem({ urlQuestion }: Props) {
   }
 
   function handleEnd() {
-    setFinished(true) 
+    setFinished(true)
   }
 
   if (loading) {
@@ -42,9 +42,9 @@ export default function QuestionItem({ urlQuestion }: Props) {
   if (finished) {
     return (
       <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-xl">
-          <h2 className="text-xl font-semibold text-gray-900 text-center mb-2">
-              Questionnaire Terminé !
-          </h2>
+        <h2 className="text-xl font-semibold text-gray-900 text-center mb-2">
+          Questionnaire Terminé !
+        </h2>
       </div>
     )
   }
@@ -58,7 +58,12 @@ export default function QuestionItem({ urlQuestion }: Props) {
       </h2>
       <ul>
         {choices.map((urlChoice: string) => (
-          <ChoiceItem key={urlChoice} urlChoice={urlChoice} onNext={handleNext} onEnd={handleEnd} />
+          <ChoiceItem
+            key={urlChoice}
+            urlChoice={urlChoice}
+            onNext={handleNext}
+            onEnd={handleEnd}
+          />
         ))}
       </ul>
     </div>
