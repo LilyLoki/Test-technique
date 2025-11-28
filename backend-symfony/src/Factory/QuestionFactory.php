@@ -44,7 +44,7 @@ final class QuestionFactory extends PersistentProxyObjectFactory
         return [
             'mediaType' => $mediaType,
             'mediaUrl' => $mediaUrl,
-            'questionText' => rtrim(self::faker()->sentence(), '.') . ' ?',
+            'questionText' => rtrim(self::faker()->sentence(), '.').' ?',
         ];
     }
 
