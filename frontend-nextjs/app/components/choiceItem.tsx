@@ -15,17 +15,14 @@ export default function ChoiceItem({ urlChoice, onNext, onEnd }: Props) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true)
-    fetchChoiceByUrl(urlChoice)
-      .then((data) => {
-        setChoice(data)
-      })
-      .catch(() => {
-        setChoice(null)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+  const loadData = async () => {
+    setLoading(true)  
+    const data = await fetchChoiceByUrl(urlChoice)
+    setChoice(data)
+    setLoading(false)
+  }
+
+    loadData()
   }, [urlChoice])
 
   function handleClick() {

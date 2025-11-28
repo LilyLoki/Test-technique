@@ -14,18 +14,15 @@ export default function QuestionItem({ urlQuestion }: Props) {
   const [loading, setLoading] = useState(true)
   const [finished, setFinished] = useState(false)
 
-  useEffect(() => {
-    setLoading(true)
-    fetchQuestionByUrl(urlQuestion)
-      .then((data) => {
-        setQuestion(data)
-      })
-      .catch(() => {
-        setQuestion(null)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+ useEffect(() => {
+  const loadData = async () => {
+    setLoading(true) 
+    const data = await fetchQuestionByUrl(urlQuestion)
+    setQuestion(data)
+    setLoading(false)
+  }
+
+    loadData()
   }, [urlQuestion])
 
   function handleNext(nextUrl: string) {
