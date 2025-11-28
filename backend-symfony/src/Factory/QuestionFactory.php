@@ -35,7 +35,7 @@ final class QuestionFactory extends PersistentProxyObjectFactory
     {
         $mediaTypeList = ['image', 'video', 'text'];
         $mediaType = self::faker()->randomElement($mediaTypeList);
-
+        $mediaUrl = null;
         if ('video' === $mediaType) {
             $videoUrls = [
                 'https://www.youtube.com/watch?v=JvSVXJ-3HaY',
@@ -50,9 +50,6 @@ final class QuestionFactory extends PersistentProxyObjectFactory
                 'https://picsum.photos/800/600',
             ];
             $mediaUrl = self::faker()->randomElement($imageUrls);
-        }
-        if ('text' === $mediaType) {
-            $mediaUrl = null;
         }
 
         return [
