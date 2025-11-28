@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "7080:8080"
+    depends_on:
+      - db
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend-symfony/Dockerfile
+    volumes:
+      - ./backend:/srv/app:cached
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/db?serverVersion=16&charset=utf8"
+      CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+      APP_ENV: dev
+      APP_DEBUG: '1'
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend-nextjs/Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app:cached
+      - /usr/src/app/node_modules
+    environment:
+      NEXT_PUBLIC_BASE_URL: "http://localhost:8000"
+      NEXT_SERVER_BASE_URL: "http://backend:8000"
+    ports:
+      - "3000:3000"
+    command: ["npm","run","dev"]
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
