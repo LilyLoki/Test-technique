@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/me',
             provider: MeProvider::class,
             normalizationContext: ['groups' => ['User_me', 'User_read']],
-            security: 'object == user',
+            security: 'object.getUsername() == user.getUsername()',
             extraProperties: [
                 'openapi_context' => [
                     'summary' => 'Retrieve the currently logged in user',
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Patch(normalizationContext: ['groups' => ['User_read']],
             denormalizationContext: ['groups' => ['User_write', 'User_me']],
-            security: 'object == user',
+            security: 'object.getUsername() == user.getUsername()',
         ),
     ])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
