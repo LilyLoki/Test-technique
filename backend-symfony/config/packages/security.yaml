@@ -9,8 +9,6 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
-        jwt:
-            lexik_jwt: ~
 
     firewalls:
         dev:
@@ -18,7 +16,8 @@ security:
             security: false
         api:
             pattern: ^/api/
-            provider: jwt
+            provider: app_user_provider 
+            stateless: true
             jwt: ~
         main:
             lazy: true
