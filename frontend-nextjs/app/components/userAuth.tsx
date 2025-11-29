@@ -1,13 +1,27 @@
 'use client'
-import fetchMe from '../services/api/users'
-import Link from 'next/link'
 
-export default async function UserAuth({}) {
-  const user = await fetchMe().then((data) => data)
+import Link from 'next/link'
+import { useAuth } from '../contexts/AuthContext'
+
+export default function UserAuth({}) {
+  const { user, isLoading, logout } = useAuth()
+
+  if (isLoading) {
+    return <div>Chargement...</div>
+  }
+
   if (user) {
     return (
-      <div>
-        <p>Welcome, {user.username}!</p>
+      <div className="flex flex-row items-center gap-4 p-4">
+        <p className="text-center font-bold text-xl text-800">
+          {user.username}
+        </p>
+        <button
+          onClick={logout}
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 p-2 rounded inline-block"
+        >
+          Logout
+        </button>
       </div>
     )
   } else {
