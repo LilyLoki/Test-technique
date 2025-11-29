@@ -26,12 +26,14 @@ export default function UserAuth({}) {
     )
   } else {
     return (
-      <Link
-        href="/login"
-        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 p-2 rounded inline-block"
-      >
-        Login
-      </Link>
+      <div className="flex flex-row items-center gap-4 p-4">
+        <Link
+          href="/login"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 p-2 rounded inline-block"
+        >
+          Login
+        </Link>
+      </div>
     )
   }
 }
