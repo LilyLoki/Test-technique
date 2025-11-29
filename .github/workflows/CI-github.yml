@@ -39,19 +39,14 @@ jobs:
 
       - name: Generate JWT Secret Key
         id: generate_key 
-        run: |
-          # Generate a 32-byte (256-bit) cryptographically secure base64 key
-          # The resulting key is ready for use by LexikJWTAuthenticationBundle
-          GENERATED_KEY=$(openssl rand -base64 32)
-          
-          # Set the output variable to be used in later steps
-          echo "JWT_SECRET_KEY=$GENERATED_KEY" >> $GITHUB_OUTPUT
+        run: php bin/console lexik:jwt:generate-keypair
 
       - name: Run PHP-CS-Fixer, PHPStan and PHPUnit tests
         run: composer test
         env:
           APP_DEBUG: 0
           JWT_SECRET_KEY: ${{ steps.generate_key.outputs.JWT_SECRET_KEY }}
+          JWT_PUBLIC_KEY: ${{ steps.generate_key.outputs.JWT_PUBLIC_KEY }}
 
   # ----------------------------
   #   FRONTEND (Next.js)
