@@ -3,7 +3,6 @@
 namespace App\Serialization\Denormalizer;
 
 use App\Entity\User;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -15,14 +14,11 @@ class UserDenormalizer implements DenormalizerInterface, DenormalizerAwareInterf
     use DenormalizerAwareTrait;
     private const ALREADY_CALLED = 'USER_DENORMALIZER_ALREADY_CALLED';
     private UserPasswordHasherInterface $passwordHasher;
-    private Security $security;
 
     public function __construct(
-        UserPasswordHasherInterface $passwordHasher,
-        Security $security)
+        UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
-        $this->security = $security;
     }
 
     public function getSupportedTypes(?string $format): array
@@ -43,8 +39,8 @@ class UserDenormalizer implements DenormalizerInterface, DenormalizerAwareInterf
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
         $context[self::ALREADY_CALLED] = true;
+        $user = $this->denormalizer->denormalize($data, $type, $format, $context);
         if (isset($data['password']) && $data['password']) {
-            $user = $this->security->getUser();
             if ($user instanceof PasswordAuthenticatedUserInterface) {
                 $data['password'] = $this->passwordHasher->hashPassword($user, $data['password']);
             }
