@@ -19,6 +19,10 @@ RUN composer install --no-interaction --prefer-dist --no-scripts --no-autoloader
 # Copier tout le projet
 COPY backend-symfony/ ./
 
+RUN mkdir -p config/jwt \
+    && openssl genpkey -algorithm RSA -out config/jwt/private.pem -aes256 -pass pass:${JWT_PASSPHRASE} \
+    && openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout -passin pass:${JWT_PASSPHRASE}
+
 # Générer autoload
 RUN composer dump-autoload --optimize && composer run-script post-install-cmd || true
 
