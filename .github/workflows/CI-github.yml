@@ -37,21 +37,19 @@ jobs:
       - name: Install dependencies (Composer)
         run: composer install --no-progress --no-interaction --prefer-dist
 
-      - name: Define JWT environment variables
+      - name: Set JWT env vars
         run: |
           echo "JWT_SECRET_KEY=config/jwt/private.pem" >> $GITHUB_ENV
           echo "JWT_PUBLIC_KEY=config/jwt/public.pem" >> $GITHUB_ENV
           echo "JWT_PASSPHRASE=${{ secrets.JWT_PASSPHRASE }}" >> $GITHUB_ENV
 
-      - name: Generate JWT Secret Key
+      - name: Generate JWT keypair
         run: php bin/console lexik:jwt:generate-keypair --overwrite
 
-      - name: Run PHP-CS-Fixer, PHPStan and PHPUnit tests
+      - name: Run tests (PHP-CS-Fixer, PHPStan, PHPUnit)
         run: composer test
         env:
           APP_DEBUG: 0
-          JWT_SECRET_KEY: ${{ steps.generate_key.outputs.JWT_SECRET_KEY }}
-          JWT_PUBLIC_KEY: ${{ steps.generate_key.outputs.JWT_PUBLIC_KEY }}
 
   # ----------------------------
   #   FRONTEND (Next.js)
