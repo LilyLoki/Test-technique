@@ -10,45 +10,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserApiTest extends ApiTestCase
 {
-    public function testAuthenticatedUserGetMe(): void
-    {
-        $client = static::createClient();
-
-        $userFactory = UserFactory::createOne([
-            'username' => 'User123',
-        ]);
-
-        $user = static::getContainer()->get(EntityManagerInterface::class)
-        ->getRepository(User::class)
-        ->find($userFactory->getId());
-
-        $client->loginUser($user);
-
-        $response = $client->request(
-            'GET',
-            '/api/me'
-        );
-
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertSame('User123', $response->toArray()['username']);
-    }
-
-    public function testNotAuthenticatedUserGetMe(): void
-    {
-        $client = static::createClient();
-
-        $user = $user = UserFactory::createOne([
-            'username' => 'User123',
-        ]);
-
-        $response = $client->request(
-            'GET',
-            '/api/me'
-        );
-
-        $this->assertResponseStatusCodeSame(404);
-    }
-
     public function testGetUser(): void
     {
         $client = static::createClient();
@@ -68,26 +29,40 @@ class UserApiTest extends ApiTestCase
 
     public function testModifyAuthenticatedUser(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
+        $container = self::getContainer();
 
-        $userFactory = UserFactory::createOne([
-            'username' => 'User123',
-            'password' => 'Passwordtest',
+        $user = new User();
+        $user->setUsername('User123');
+        $user->setEmail('test@example.com');
+        $user->setPassword(
+            $container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+        );
+
+        $manager = $container->get('doctrine')->getManager();
+        $manager->persist($user);
+        $manager->flush();
+
+        $responseAuth = $client->request('POST', '/auth', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'username' => 'User123',
+                'password' => '$3CR3T',
+            ],
         ]);
 
-        $user = static::getContainer()->get(EntityManagerInterface::class)
-        ->getRepository(User::class)
-        ->find($userFactory->getId());
+        $json = $responseAuth->toArray();
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayHasKey('token', $json);
 
-        $client->loginUser($user);
-
-        $response = $client->request(
+        $responsePatch = $client->request(
             'PATCH',
             "/api/users/{$user->getId()}",
             [
                 'headers' => [
                     'Content-Type' => 'application/merge-patch+json',
                     'Accept' => 'application/ld+json',
+                    'Authorization' => 'Bearer '.$json['token'],
                 ],
                 'json' => [
                     'username' => 'UserModifie123',
@@ -105,6 +80,55 @@ class UserApiTest extends ApiTestCase
 
         $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
         $this->assertTrue($passwordHasher->isPasswordValid($modifiedUser, 'PasswordtestModified'));
+    }
+
+    public function testModifyOtherUser(): void
+    {
+        $client = static::createClient();
+        $container = self::getContainer();
+
+        $Otheruser = UserFactory::createOne([
+            'username' => 'UserOther123',
+        ]);
+
+        $user = new User();
+        $user->setUsername('User123');
+        $user->setEmail('test@example.com');
+        $user->setPassword(
+            $container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+        );
+
+        $manager = $container->get('doctrine')->getManager();
+        $manager->persist($user);
+        $manager->flush();
+
+        $response = $client->request('POST', '/auth', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'username' => 'User123',
+                'password' => '$3CR3T',
+            ],
+        ]);
+
+        $json = $response->toArray();
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayHasKey('token', $json);
+
+        $response = $client->request(
+            'PATCH',
+            "/api/users/{$Otheruser->getId()}",
+            [
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Accept' => 'application/ld+json',
+                    'Authorization' => 'Bearer '.$json['token'],
+                ],
+                'json' => [
+                    'username' => 'UserModifié',
+                ],
+            ]
+        );
+        $this->assertResponseStatusCodeSame(403);
     }
 
     public function testModifyNotAuthenticatedUser(): void
