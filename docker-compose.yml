@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: backend-symfony/Dockerfile
     volumes:
-      - ./backend:/srv/app:cached
+      - ./backend-symfony:/srv/app:cached
     environment:
       DATABASE_URL: "postgresql://user:password@db:5432/db?serverVersion=16&charset=utf8"
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: frontend-nextjs/Dockerfile
     volumes:
-      - ./frontend:/usr/src/app:cached
+      - ./frontend-nextjs:/usr/src/app:cached
       - /usr/src/app/node_modules
     environment:
       NEXT_PUBLIC_BASE_URL: "http://localhost:8000"
