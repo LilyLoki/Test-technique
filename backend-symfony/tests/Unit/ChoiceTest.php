@@ -36,11 +36,11 @@ class ChoiceTest extends KernelTestCase
         $question = new Question();
         $question->setquestionText('Question Text')
                     ->setmediaType('text')
-                    ->isRoot(true);
+                    ->setIsRoot(true);
         $question->setQuestionnaire($questionnaire);
 
         $choice = new Choice();
-        $choice->setchoiceText('')
+        $choice->setChoiceText('')
                     ->setDisplayOrder(1)
                     ->setQuestion($question);
         $violations = $validator->validate($choice);
