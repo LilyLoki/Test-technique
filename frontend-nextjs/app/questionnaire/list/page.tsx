@@ -2,6 +2,8 @@ import fetchAllQuestionnaires from '../../services/api/questionnaires'
 import { Questionnaire } from '../../types/questionnaireType'
 import QuestionnaireItem from '../../components/questionnaireItem'
 
+export const dynamic = 'force-dynamic'
+
 export default async function QuestionnaireListPage() {
   const data = await fetchAllQuestionnaires()
   const questionnaires: Questionnaire[] = data.member
