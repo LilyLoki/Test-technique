@@ -2,6 +2,9 @@ import { fetchQuestionnaireById } from '@/app/services/api/questionnaires'
 import { Questionnaire } from '../../types/questionnaireType'
 import QuestionItem from '../../components/questionItem'
 import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
+
 export default async function QuestionnairePage({
   params,
 }: {

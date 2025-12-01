@@ -114,7 +114,7 @@ class ChoiceApiTest extends ApiTestCase
         $repository = static::getContainer()->get(\Doctrine\ORM\EntityManagerInterface::class)
         ->getRepository(\App\Entity\Choice::class);
 
-        $modifiedChoice = $repository->find($question->getId());
+        $modifiedChoice = $repository->find($choice->getId());
         $this->assertSame('Choix modifié', $modifiedChoice->getChoiceText());
     }
 

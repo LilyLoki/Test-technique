@@ -92,13 +92,14 @@
             "php vendor/bin/php-cs-fixer fix"
         ],
          "test:phpstan": [
-            "vendor/bin/phpstan analyse"
+            "vendor/bin/phpstan analyse --memory-limit 500M"
         ],
         "test:phpunit": [
-            "php bin/console cache:clear --env=test --no-warmup",
-            "rm -f var/data.db", 
-            "php bin/console doctrine:schema:create --quiet --env=test",
-            "vendor/bin/phpunit --testdox"
+            "php bin/console cache:clear --env=test --no-warmup", 
+            "php bin/console doctrine:database:drop --force --env=test --if-exists", 
+            "php bin/console doctrine:database:create --env=test", 
+            "php bin/console doctrine:schema:create --quiet --env=test", 
+            "APP_ENV=test vendor/bin/phpunit --testdox"
         ],
         "test": [
             "@test:csfixer",

@@ -1,6 +1,7 @@
-import { responseCookiesToRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
-
-export const BASE_URL = 'http://localhost:8000'
+export const BASE_URL =
+  typeof window === 'undefined'
+    ? process.env.NEXT_SERVER_BASE_URL || 'http://backend:8000' // server-side (SSR)
+    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8000' // client-side
 
 export default async function fetchMe() {
   const token = localStorage.getItem('authToken')
