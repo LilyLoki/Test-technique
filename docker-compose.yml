@@ -34,6 +34,10 @@ services:
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
       APP_ENV: dev
       APP_DEBUG: '1'
+      JWT_SECRET_KEY: "%kernel.project_dir%/config/jwt/private.pem"
+      JWT_PUBLIC_KEY: "%kernel.project_dir%/config/jwt/public.pem"
+      JWT_PASSPHRASE: "test_passphrase"
+      TRUSTED_PROXIES: "127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
     ports:
       - "8000:8000"
     depends_on:
@@ -51,26 +55,9 @@ services:
       NEXT_SERVER_BASE_URL: "http://backend:8000"
     ports:
       - "3000:3000"
-    command: ["npm","run","dev"]
+    command: ["npm", "run", "dev"]
     depends_on:
       - backend
-
-  caddy:
-    image: caddy:2
-    container_name: caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - backend
-      - frontend
 
 volumes:
   pgdata:
-  caddy_data:
-  caddy_config:
